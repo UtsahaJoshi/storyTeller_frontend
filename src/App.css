@@ -1,34 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* This ensures padding does not add to the total width/height */
+}
+
 .App {
+  position: relative;
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-image: url(./bg.png);
+  background-size: cover;
+  background-position: left;
+  background-repeat: no-repeat;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  color: black;
+  overflow: hidden;
+}
+
+
+.App-logo {
+  height: 15vmin; /* Reduced size for the logo on desktop */
+  pointer-events: none;
+  margin-top: 0; /* Reduced to 0 to move the logo to the very top */
+}
+
+.input-container, .loading-container {
+  width: 60%; /* Increased width of the container */
+  max-width: 800px; /* Maximum width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.story-input {
+  width: 100%; /* Full width of the container */
+  height: 150px;
+  margin: 20px 0;
+  padding: 10px;
+  font-size: 1em;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.3s;
 }
 
-@keyframes App-logo-spin {
+.story-input:focus {
+  border-color: #007bff;
+}
+
+.generate-button {
+  z-index: 2;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  background-color: #007bff; /* Primary color */
+  color: white; /* Text color */
+  border: none; /* No border */
+  border-radius: 8px; /* Rounded corners */
+  outline: none; /* Removes the default focus outline */
+  box-shadow: none; /* Removes any box shadow */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for colors */
+}
+
+.generate-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  color: #fff; /* Ensuring text color remains white */
+}
+
+.loading-logo {
+  height: 10vmin; /* Adjust size as needed */
+  animation: scaleUp 0.1s linear forwards, rotate 2s linear infinite 0.1s;
+  margin-bottom: 40px; /* Adds space between the logo and the text */
+  z-index: 2;
+}
+
+/* Responsive design for screens smaller than 600px */
+@media (max-width: 600px) {
+  .App-logo {
+    height: 30vmin; /* Keep larger size for mobile */
+  }
+
+  .input-container, .loading-container {
+    width: 95%; /* Wider container on smaller screens */
+  }
+
+  .story-input {
+    width: 100%; /* Full width of the container */
+  }
+  .loading-logo {
+    height: 20vmin; /* Adjust size as needed */
+    animation: scaleUp 0.1s linear forwards, rotate 2s linear infinite 0.1s;
+    margin-bottom: 10px; /* Adds space between the logo and the text */
+    z-index: 2;
+  }
+}
+
+.fading-out {
+  animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.loading-text {
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for the element's own size */
+  z-index: 2; /* Ensures the text is above other elements */
+  color: black; /* Ensure the color contrasts against the background */
+  font-size: 1.5em; /* Adjust the font size for better visibility */
+  animation: blink 1.2s infinite;
+  margin-top: 40px;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate {
   from {
     transform: rotate(0deg);
   }
@@ -36,3 +160,88 @@
     transform: rotate(360deg);
   }
 }
+
+.play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.play-icon {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent; /* Adjust size as needed */
+  border-bottom: 15px solid transparent; /* Adjust size as needed */
+  border-left: 25px solid black; /* Adjust size as needed */
+  margin: auto;
+}
+
+.audio-player {
+  position: absolute; /* Use absolute positioning */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for the element's own size */
+  z-index: 5; /* Ensure it's above the background */
+}
+
+.animated-text {
+  position: absolute; /* Use absolute positioning */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for the element's own size */
+  width: 80%; /* Adjust width as needed */
+  text-align: center; /* Center text */
+  z-index: 1; /* Ensure it's above other elements */
+  margin: 0 auto; /* Center within the container */
+  padding: 20px; /* Add some padding */
+  animation-name: fadeInOut;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Black outline */
+  color: white;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  10% { opacity: 1; }
+  80% {opacity: 1;}
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1; /* Place it behind other content */
+}
+
+.background-image:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+  z-index: 1; /* Position it above the background but below other content */
+  display: none; /* Initially hidden */
+}
+
+.background-image.show-overlay:before {
+  display: block; /* Show the overlay */
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(1.5)}
+  100% {transform: scale(1)}
+}
+
+
